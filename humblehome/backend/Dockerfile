@@ -1,11 +1,16 @@
 FROM python:3.11-slim
+
 WORKDIR /app
 
-ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
-
+# Install dependencies
 COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
-EXPOSE 8888
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy app files
 COPY . .
-CMD ["flask", "run", "--host=0.0.0.0", "--port=8888", "--debug"]
+
+# Expose port 8888
+EXPOSE 8888
+
+# Run Flask in production mode on port 8888 without debug
+CMD ["flask", "run", "--host=0.0.0.0", "--port=8888"]
