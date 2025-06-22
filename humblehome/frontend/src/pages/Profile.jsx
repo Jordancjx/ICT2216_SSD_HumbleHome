@@ -19,7 +19,7 @@ function Profile({ user, setUser }) {
         address: user.address || "",
       });
 
-      setImageUrl(`http://localhost:5000/profile-image/${user.profile_pic}`);
+      setImageUrl(`${process.env.REACT_APP_API_URL}/profile-image/${user.profile_pic}`);
     }
   }, [user]);
 
@@ -31,7 +31,7 @@ function Profile({ user, setUser }) {
     e.preventDefault();
     const token = localStorage.getItem("token");
 
-    const res = await fetch("http://localhost:5000/update-profile", {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/update-profile`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -57,7 +57,7 @@ function Profile({ user, setUser }) {
     const formData = new FormData();
     formData.append("image", file);
 
-    const response = await fetch("http://localhost:5000/upload-profile-image", {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/upload-profile-image`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -67,7 +67,7 @@ function Profile({ user, setUser }) {
 
     const data = await response.json();
     if (response.ok) {
-      setImageUrl(`http://localhost:5000/profile-image/${data.filename}`);
+      setImageUrl(`${process.env.REACT_APP_API_URL}/profile-image/${data.filename}`);
       setUser({ ...user, profile_image: data.filename });
       console.log(data);
       alert("Image Uploaded!");

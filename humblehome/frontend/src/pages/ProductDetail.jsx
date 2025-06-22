@@ -48,7 +48,7 @@ export default function ProductDetail({ products }) {
 
   if (!product) return <p>Product not found.</p>;
 
-  const productUrl = `http://localhost:5000/${product.model_file}`;
+  const productUrl = `${process.env.REACT_APP_API_URL}/${product.model_file}`;
   return (
     <div className="w-3/4 p-8 flex">
       <aside className="w-1/4 pr-8">

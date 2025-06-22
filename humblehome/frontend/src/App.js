@@ -19,7 +19,7 @@ export default function App() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/products/active");
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/active`);
         const data = await response.json();
         // console.log(data);
         setProducts(data);
@@ -33,7 +33,7 @@ export default function App() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch("http://localhost:8888/api/categories");
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/categories`);
       const data = await response.json();
       // console.log(data);
       setCategories(data);
@@ -47,7 +47,7 @@ export default function App() {
     if (!token) return;
 
     try {
-      const res = await fetch("http://localhost:8888/me", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

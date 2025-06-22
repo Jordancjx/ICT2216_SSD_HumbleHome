@@ -5,7 +5,7 @@ const ProductCard = ({ product }) => (
     <div className="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition">
       <div className="relative">
         <img
-          src={`http://localhost:5000/${product.thumbnail_image}`}
+          src={`${process.env.REACT_APP_API_URL}/${product.thumbnail_image}`}
           alt={product.name}
           className="w-full h-64 object-cover mb-3 rounded"
         />
