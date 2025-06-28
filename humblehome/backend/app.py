@@ -26,4 +26,4 @@ if __name__ == "__main__":
     app = create_app()
     UPLOAD_FOLDER = 'uploads/models'
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-    app.run(host="0.0.0.0", port=8888)
+    app.run(host="0.0.0.0", port=8888, ssl_context=("/app/certs/fullchain.pem", "/app/certs/privkey.pem"))

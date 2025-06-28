@@ -12,13 +12,17 @@ services:
     volumes:
       - ./backend/models:/app/models
       - ./uploads:/app/uploads
+      - ./frontend/certs:/app/certs
 
   frontend:
     build: ./frontend
     ports:
-      - "8080:80"        # Nginx serves React on port 80 inside container
+      - "80:80"        # Nginx serves React on port 80 inside container
+      - "443:443"      # Expose HTTPS port
     depends_on:
       - backend
+    volumes:
+      - ./frontend/certs:/etc/nginx/certs  # Mount SSL certificates
 
   db:
     image: mysql:8

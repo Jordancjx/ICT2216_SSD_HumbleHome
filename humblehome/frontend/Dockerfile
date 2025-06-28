@@ -15,7 +15,11 @@ FROM nginx:stable-alpine
 # Copy React build to Nginx html folder
 COPY --from=build /app/build /usr/share/nginx/html
 
-# Expose port 80
-EXPOSE 80
+# Copy SSL config and certificates
+COPY ssl.conf /etc/nginx/conf.d/ssl.conf
+COPY certs /etc/nginx/certs
+
+# Expose HTTP and HTTPS ports
+EXPOSE 80 443
 
 CMD ["nginx", "-g", "daemon off;"]
