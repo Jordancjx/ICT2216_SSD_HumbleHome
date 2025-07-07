@@ -19,7 +19,6 @@ services:
 
   frontend:
     build: ./frontend
-    ports:
     depends_on:
       - backend
     volumes:
