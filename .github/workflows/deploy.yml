@@ -26,7 +26,7 @@ jobs:
       
       - name: Fix file permissions
         run: |
-          chmod -R 777 ./var/log/humblehome
+          chmod -R 777 ICT2216_SSD_HumbleHome/humblehome/var/log/humblehome
 
 
       - name: Start Docker on EC2
