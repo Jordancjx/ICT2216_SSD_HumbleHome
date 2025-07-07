@@ -7,7 +7,6 @@ import os
 from logging_config import setup_logging
 import sys
 import signal
-from werkzeug.middleware.proxy_fix import ProxyFix
 
 logger = setup_logging()
 
@@ -22,7 +21,6 @@ signal.signal(signal.SIGTERM, handle_shutdown)
 
 def create_app():
     app = Flask(__name__)
-    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1)  # Handles reverse proxy headers for Flask
     app.config['SECRET_KEY'] = 'supersecretkey'
     app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'uploads', 'models')
 
@@ -34,8 +32,8 @@ def create_app():
     from auth import auth_bp
     from products import products_bp
     from purchase import purchases_bp
-    from password_reset_email_service import bp
-    from password_reset_confirm import password_reset_bp
+    from resetpassword import bp
+    from password_reset import password_reset_bp
     
     app.register_blueprint(bp)
     app.register_blueprint(profile_bp)
@@ -54,7 +52,7 @@ if __name__ == "__main__":
         logger.info("Flask app started successfully.")
         UPLOAD_FOLDER = 'uploads/models'
         os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-        app.run(host="0.0.0.0", port=5000)
+        app.run(host="0.0.0.0", port=8888)
         logger.info("Flask app ended/shutdown.")
     except Exception as e:
         logger.exception(f"Error starting Flask app: {e}")
