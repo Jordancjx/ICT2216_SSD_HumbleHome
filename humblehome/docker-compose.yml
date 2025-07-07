@@ -20,9 +20,12 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "3000:80"        # Map container nginx port 80 to host 3000
+      - "80:80"        # Nginx serves React on port 80 inside container
+      - "443:443"      # Expose HTTPS port
     depends_on:
       - backend
+    volumes:
+      - ./frontend/certs:/etc/nginx/certs  # Mount SSL certificates
 
   db:
     image: mysql:8
