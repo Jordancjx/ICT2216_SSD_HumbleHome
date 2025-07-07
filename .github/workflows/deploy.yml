@@ -26,8 +26,7 @@ jobs:
       
       - name: Fix file permissions
         run: |
-          chmod -R 755 ./path/to/deployed/files
-          chown -R www-data:www-data ./path/to/deployed/files  # if your server user is www-data
+          chmod -R 777 ./var/log/humblehome
 
 
       - name: Start Docker on EC2
