@@ -23,6 +23,12 @@ jobs:
       - name: Upload source code to EC2
         run: |
           rsync -az -e "ssh -i ~/.ssh/id_rsa -p 22" ./ ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USER }}/ICT2216_SSD_HumbleHome
+      
+      - name: Fix file permissions
+        run: |
+          chmod -R 755 ./path/to/deployed/files
+          chown -R www-data:www-data ./path/to/deployed/files  # if your server user is www-data
+
 
       - name: Start Docker on EC2
         run: |
