@@ -135,7 +135,7 @@ export default function App() {
             element={
               <main className="w-full justify-center flex-col items-center">
                 <div className="relative w-full h-72 bg-gray-200 flex items-center justify-center text-center">
-                  <h1 className="text-5xl font-light">HumbleHome33432</h1>
+                  <h1 className="text-5xl font-light">HumbleHome3343s2</h1>
                 </div>
                 <div className="w-full flex justify-center items-center">
                   <div className="w-5/6 px-8 py-4 flex">
