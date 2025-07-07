@@ -23,7 +23,10 @@ services:
       - backend
     ports:
     - "80:80"
-    - "8080:443"
+    - "443:443"
+    volumes:
+      - ./frontend/certs:/etc/nginx/certs  
+    
       
 
   db:
