@@ -24,9 +24,11 @@ jobs:
         run: |
           rsync -az -e "ssh -i ~/.ssh/id_rsa -p 22" ./ ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USER }}/ICT2216_SSD_HumbleHome
       
-      - name: Fix file permissions
+      - name: Fix file permissions on EC2
         run: |
-          chmod -R 777 ICT2216_SSD_HumbleHome/humblehome/var/log/humblehome
+          ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << EOF
+            chmod -R 777 /home/${{ secrets.EC2_USER }}/ICT2216_SSD_HumbleHome/humblehome/var/log/humblehome || echo "Directory not found"
+          EOF
 
 
       - name: Start Docker on EC2
