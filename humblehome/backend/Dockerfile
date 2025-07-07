@@ -7,16 +7,16 @@ ENV FLASK_RUN_HOST=0.0.0.0
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-# Create logs directory and set permissions while still root
-RUN mkdir -p /app/logs && chmod -R 777 /app/logs
-
-# Copy source code
+# Copy all app source code (including /logs if it exists locally)
 COPY . .
 
-# Change ownership of app files to www-data
-RUN chown -R www-data:www-data /app
+# Ensure /app/logs exists, even if not in host
+RUN mkdir -p /app/logs
 
-# Switch to www-data user (after all privileged tasks)
+# Set correct permissions after COPY step
+RUN chown -R www-data:www-data /app && chmod -R u+rwX /app/logs
+
+# Switch to non-root user
 USER www-data
 
 EXPOSE 8888
