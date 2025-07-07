@@ -6,7 +6,8 @@ def setup_logging():
     log_dir = '/app/logs'
     os.makedirs(log_dir, exist_ok=True)
 
-    log_path = os.path.join(log_dir, 'app.log')
+    log_path = '/app/var/log/humblehome/app.log'
+    os.makedirs(os.path.dirname(log_path), exist_ok=True)
 
     logger = logging.getLogger('humblehome_logger')  # Custom logger
     logger.setLevel(logging.INFO)
