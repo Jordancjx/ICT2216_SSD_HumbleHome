@@ -1,8 +1,8 @@
 services:
   backend:
     build: ./backend
-    ports:
-      - "8888:8888"
+    expose:
+      - "8888"  # Expose without publishing to host
     depends_on:
       - db
     environment:
@@ -11,23 +11,27 @@ services:
       - ./backend/models:/app/models
       - ./uploads:/app/uploads
       - ./var/log/humblehome:/app/var/log/humblehome
-    develop:
-      watch:
-        - action: sync
-          path: .
-          target: /app
 
   frontend:
     build: ./frontend
+    expose:
+      - "80"
     depends_on:
       - backend
-    ports:
-    - "80:80"
-    - "443:443"
     volumes:
       - ./frontend/certs:/etc/nginx/certs  
-    
-      
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./frontend/certs:/etc/nginx/certs
+    depends_on:
+      - frontend
+      - backend
 
   db:
     image: mysql:8
@@ -35,21 +39,9 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: humblehome
-    ports:
-      - "3306:3306"
     volumes:
       - dbdata:/var/lib/mysql
       - ./initdb:/docker-entrypoint-initdb.d
 
-  nginx:
-    image: nginx:latest
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./frontend/certs:/etc/nginx/certs  
-    depends_on:
-      - frontend
-      - backend
-      
 volumes:
   dbdata:
-
