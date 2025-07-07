@@ -11,13 +11,13 @@ import signal
 logger = setup_logging()
 
 # Not sure if this is needed, but keeping it for now
-def handle_shutdown(signum, frame):
-    logger.info("Flask app is shutting down.")
-    sys.exit(0)
+# def handle_shutdown(signum, frame):
+#     logger.info("Flask app is shutting down.")
+#     sys.exit(0)
     
-# Handle SIGINT (Ctrl+C) and SIGTERM (e.g., Docker stop)
-signal.signal(signal.SIGINT, handle_shutdown)
-signal.signal(signal.SIGTERM, handle_shutdown)
+# # Handle SIGINT (Ctrl+C) and SIGTERM (e.g., Docker stop)
+# signal.signal(signal.SIGINT, handle_shutdown)
+# signal.signal(signal.SIGTERM, handle_shutdown)
 
 def create_app():
     app = Flask(__name__)
