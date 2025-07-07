@@ -16,4 +16,6 @@ RUN chown -R www-data:www-data /app
 USER www-data
 # CMD ["flask", "run", "--debug"]
 
+RUN mkdir -p /app/logs && chmod -R 755 /app/logs
+
 CMD ["python", "app.py"]
