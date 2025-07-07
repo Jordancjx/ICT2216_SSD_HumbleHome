@@ -17,7 +17,7 @@ RUN mkdir -p /app/logs
 RUN chown -R www-data:www-data /app && chmod -R u+rwX /app/logs
 
 # Switch to non-root user
-USER www-data
+# USER www-data
 
 EXPOSE 8888
 CMD ["python", "app.py"]
