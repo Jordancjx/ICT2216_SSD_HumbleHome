@@ -20,8 +20,6 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "80:80"        # Nginx serves React on port 80 inside container
-      - "443:443"      # Expose HTTPS port
     depends_on:
       - backend
     volumes:
@@ -45,6 +43,7 @@ services:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - frontend
       - backend
