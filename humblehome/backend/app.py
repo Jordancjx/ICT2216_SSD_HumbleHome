@@ -32,8 +32,8 @@ def create_app():
     from auth import auth_bp
     from products import products_bp
     from purchase import purchases_bp
-    from resetpassword import bp
-    from password_reset import password_reset_bp
+    from password_reset_email_service import bp
+    from password_reset_confirm import password_reset_bp
     
     app.register_blueprint(bp)
     app.register_blueprint(profile_bp)
