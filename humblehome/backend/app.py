@@ -32,15 +32,15 @@ def create_app():
     from auth import auth_bp
     from products import products_bp
     from purchase import purchases_bp
-    from resetpassword import bp
-    from password_reset import password_reset_bp
+    # from resetpassword import bp
+    # from password_reset import password_reset_bp
     
-    app.register_blueprint(bp)
+    # app.register_blueprint(bp)
     app.register_blueprint(profile_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(products_bp)
     app.register_blueprint(purchases_bp)
-    app.register_blueprint(password_reset_bp)
+    # app.register_blueprint(password_reset_bp)
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     app.teardown_appcontext(close_db)
     return app
