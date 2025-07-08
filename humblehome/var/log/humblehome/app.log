@@ -160,3 +160,5 @@
 2025-07-06 14:17:46,079 WARNING: Failed login attempt for jordan
 2025-07-06 14:18:23,119 INFO: User "Jordan" initiated profile image upload
 2025-07-06 14:18:23,143 INFO: User "Jordan" uploaded a new profile image!
+2025-07-08 07:28:13,081 INFO: create_app() called
+2025-07-08 07:28:13,420 INFO: create_app() called

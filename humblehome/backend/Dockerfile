@@ -20,4 +20,4 @@ RUN chown -R www-data:www-data /app && chmod -R u+rwX /app/logs
 # USER www-data
 
 EXPOSE 8888
-CMD ["python", "app.py"]
+CMD ["python3", "app.py"]
