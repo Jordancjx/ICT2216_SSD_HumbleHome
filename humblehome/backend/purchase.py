@@ -9,7 +9,7 @@ import json
 purchases_bp = Blueprint('purchases', __name__)
 
 # TODO: Add to order_items & orders
-@purchases_bp.route('/api/checkout', methods = ['POST'])
+@purchases_bp.route('/checkout', methods = ['POST'])
 def checkout():
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -53,7 +53,7 @@ def checkout():
         return jsonify({"error": "Something went wrong during checkout"}), 500
         # return jsonify({"error": str(e), "data": data}), 500 <- Debug Line if needed
     
-@purchases_bp.route('/api/purchase-history/<int:user_id>', methods=['GET'])
+@purchases_bp.route('/purchase-history/<int:user_id>', methods=['GET'])
 def get_purchase_history(user_id):
     db = get_db()
     cursor = db.cursor(dictionary=True)

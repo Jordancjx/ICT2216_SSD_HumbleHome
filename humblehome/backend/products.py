@@ -30,15 +30,15 @@ def is_valid_stl(file_stream):
         return False
     
 
-@products_bp.route('/api/uploads/images/<filename>')
+@products_bp.route('/uploads/images/<filename>')
 def serve_image_file(filename):
     return send_from_directory('uploads/images', filename)
 
-@products_bp.route('/api/uploads/models/<filename>')
+@products_bp.route('/uploads/models/<filename>')
 def serve_model_file(filename):
     return send_from_directory('uploads/models', filename)
 
-@products_bp.route('/api/admin/add_product', methods=['POST'])
+@products_bp.route('/admin/add_product', methods=['POST'])
 @token_req
 def add_product(current_user):
     db = get_db()
@@ -119,7 +119,7 @@ def add_product(current_user):
         "model_file": model_path
     }), 200
 
-@products_bp.route('/api/products', methods=['get'])
+@products_bp.route('/products', methods=['get'])
 def get_products():
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -172,7 +172,7 @@ def get_active_products():
     
     return jsonify(products), 200    
 
-@products_bp.route('/api/categories', methods = ['GET'])
+@products_bp.route('/categories', methods = ['GET'])
 def get_categories():
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -181,7 +181,7 @@ def get_categories():
     
     return jsonify(categories), 200    
 
-@products_bp.route('/api/admin/api/update_product/<int:product_id>', methods = ['PUT'])
+@products_bp.route('/admin/update_product/<int:product_id>', methods = ['PUT'])
 @token_req
 def update_product(current_user, product_id):
     db = get_db()
@@ -273,7 +273,7 @@ def update_product(current_user, product_id):
     db.commit()
     return jsonify({"message": "Product updated successfully"}), 200
 
-@products_bp.route('/api/admin/api/add_category', methods = ['POST'])
+@products_bp.route('/admin/add_category', methods = ['POST'])
 def add_category():
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -284,7 +284,7 @@ def add_category():
     db.commit()
     return jsonify({"message": "Category added successfully"}), 200
 
-@products_bp.route('/api/categories_with_count', methods=['GET'])
+@products_bp.route('/categories_with_count', methods=['GET'])
 def get_categories_with_count():
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -299,7 +299,7 @@ def get_categories_with_count():
     categories = cursor.fetchall()
     return jsonify(categories), 200
 
-@products_bp.route('/api/search', methods = ['GET'])
+@products_bp.route('/search', methods = ['GET'])
 def search():
     query = request.args.get('q', '').strip()
     

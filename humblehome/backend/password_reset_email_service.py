@@ -16,7 +16,7 @@ SMTP_USERNAME = 'ictssd4321@gmail.com'
 SMTP_PASSWORD = 'qhuy iszs sgql bipm'
 FROM_EMAIL = 'noreply@yourdomain.com'
 
-@bp.route('/api/forgotpassword', methods=['POST'])
+@bp.route('/forgotpassword', methods=['POST'])
 def forgot_password():
     data = request.get_json()
     email = data.get('email')

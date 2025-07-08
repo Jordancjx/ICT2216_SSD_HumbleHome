@@ -42,7 +42,7 @@ def is_password_complex(password):
     pattern = r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};\'":\\|,.<>\/?]).{8,}$'
     return re.fullmatch(pattern, password) is not None
 
-@auth_bp.route('/api/register', methods=['POST'])
+@auth_bp.route('/register', methods=['POST'])
 def register():
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -77,7 +77,7 @@ def register():
     logger.info(f"New account has been registered with email: {email}")
     return jsonify({'message':'User registered successfully..'}), 201
 
-@auth_bp.route('/api/login', methods=['POST'])
+@auth_bp.route('/login', methods=['POST'])
 def login():
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -127,18 +127,18 @@ def login():
         return jsonify({'token': token, 'user': user_info}), 200
 
 
-@auth_bp.route('/api/logout', methods=['POST'])
+@auth_bp.route('/logout', methods=['POST'])
 @token_req
 def logout(current_user):
     logger.info(f"User \"{current_user['username']}\" logged out successfully")
     return jsonify({'message': 'Logged out successfully.'}), 200
 
-@auth_bp.route('/api/me', methods=['GET'])
+@auth_bp.route('/me', methods=['GET'])
 @token_req
 def get_profile(current_user):
     return jsonify({'user':current_user}), 200
 
-@auth_bp.route('/api/verify-otp', methods=['POST'])
+@auth_bp.route('/verify-otp', methods=['POST'])
 def verify_otp():
     data = request.get_json()
     user_id = data.get('user_id')

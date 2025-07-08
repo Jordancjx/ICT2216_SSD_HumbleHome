@@ -5,7 +5,7 @@ import logging
 
 password_reset_bp = Blueprint('password_reset', __name__)
 
-@password_reset_bp.route('/api/resetpassword', methods=['POST'])
+@password_reset_bp.route('/resetpassword', methods=['POST'])
 def reset_password():
     data = request.get_json()
     token = data.get('token')
