@@ -119,7 +119,7 @@ def add_product(current_user):
         "model_file": model_path
     }), 200
 
-@products_bp.route('/api/products', methods=['get'])
+@products_bp.route('/products', methods=['get'])
 def get_products():
     db = get_db()
     cursor = db.cursor(dictionary=True)
