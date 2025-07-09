@@ -10,7 +10,7 @@ services:
     volumes:
       - ./backend/models:/app/models
       - ./uploads:/app/uploads
-      - ./var/log/:/app/var/log/humblehome
+      - ./var/log/:/app/logs
 
   frontend:
     build: ./frontend
