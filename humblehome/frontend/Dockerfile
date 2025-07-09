@@ -11,6 +11,7 @@ RUN npm run build
 
 # Production stage
 FROM nginx:stable-alpine
+RUN apk add --no-cache openssl
 
 # Copy React build to Nginx html folder
 COPY --from=build /app/build /usr/share/nginx/html
