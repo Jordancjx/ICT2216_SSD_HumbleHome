@@ -35,12 +35,12 @@ def create_app():
     from password_reset_email_service import bp
     from password_reset_confirm import password_reset_bp
     
-    # app.register_blueprint(bp)
+    app.register_blueprint(bp)
     app.register_blueprint(profile_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(products_bp)
     app.register_blueprint(purchases_bp)
-    # app.register_blueprint(password_reset_bp)
+    app.register_blueprint(password_reset_bp)
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     app.teardown_appcontext(close_db)
     return app
