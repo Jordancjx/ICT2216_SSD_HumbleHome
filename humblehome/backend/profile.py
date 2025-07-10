@@ -11,7 +11,7 @@ import logging
 logger = logging.getLogger("humblehome_logger")  # Custom logger
 profile_bp = Blueprint("profile", __name__)
 
-UPLOAD_FOLDER = os.path.join(os.getcwd(), "static", "uploads")
+UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
 ALLOWED_EXTS = {"png", "jpg", "jpeg", "gif"}
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
