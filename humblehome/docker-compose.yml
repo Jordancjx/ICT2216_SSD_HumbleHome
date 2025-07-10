@@ -20,7 +20,7 @@ services:
     depends_on:
       - backend
     volumes:
-      - ./frontend/certs:/etc/nginx/certs
+      - /etc/letsencrypt:/etc/letsencrypt:ro
       - ./var/log/nginx:/var/log/nginx
 
   # nginx:

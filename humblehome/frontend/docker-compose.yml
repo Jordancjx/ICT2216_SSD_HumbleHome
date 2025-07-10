@@ -20,7 +20,7 @@ services:
     depends_on:
       - backend
     volumes:
-      - ./frontend/certs:/etc/nginx/certs  # Mount SSL certificates
+      - /etc/letsencrypt:/etc/letsencrypt:ro  # Mount Let's Encrypt certificates
 
   db:
     image: mysql:8
