@@ -480,7 +480,7 @@ def forgot_password():
     db.commit()
 
     # 4. Send email
-    reset_link = f"http://localhost/reset-password?token={reset_token}"
+    reset_link = f"https://humblehome.mooo.com/reset-password?token={reset_token}"
     email_body = f"""
     You are receiving this message because you have requested a
     password reset on HumbleHome.
