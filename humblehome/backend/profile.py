@@ -21,7 +21,7 @@ def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTS
 
 
-@profile_bp.route("/api/update-profile", methods=["PUT"])
+@profile_bp.route("/update-profile", methods=["PUT"])
 @token_req
 def updateProfile(current_user):
     data = request.json
@@ -80,7 +80,7 @@ def updateProfile(current_user):
         return jsonify({"message": "No changes detected"}), 200
 
 
-@profile_bp.route("/api/upload-profile-image", methods=["POST"])
+@profile_bp.route("/upload-profile-image", methods=["POST"])
 @token_req
 def upload_pic(current_user):
     logger.info(f"User \"{current_user['username']}\" initiated profile image upload")
@@ -187,12 +187,12 @@ def upload_pic(current_user):
         )
 
 
-@profile_bp.route("/api/profile-image/<filename>")
+@profile_bp.route("/profile-image/<filename>")
 def get_profile_image(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
 
 
-@profile_bp.route("/api/change-password", methods=["PUT"])
+@profile_bp.route("/change-password", methods=["PUT"])
 @token_req
 def change_password(current_user):
     data = request.json

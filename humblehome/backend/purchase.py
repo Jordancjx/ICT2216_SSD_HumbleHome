@@ -30,7 +30,7 @@ def is_valid_cart(cart):
     return True
 
 
-@purchases_bp.route("/api/checkout", methods=["POST"])
+@purchases_bp.route("/checkout", methods=["POST"])
 @token_req
 def checkout(current_user):
     db = get_db()
@@ -108,7 +108,7 @@ def checkout(current_user):
         return jsonify({"error": "Something went wrong during checkout"}), 500
 
 
-@purchases_bp.route("/api/purchase-history", methods=["GET"])
+@purchases_bp.route("/purchase-history", methods=["GET"])
 @token_req
 def get_purchase_history(current_user):
     db = get_db()
@@ -153,7 +153,7 @@ def get_purchase_history(current_user):
     return jsonify(list(orders.values())), 200
 
 
-@purchases_bp.route("/api/enquiries", methods=["POST"])
+@purchases_bp.route("/enquiries", methods=["POST"])
 @token_req
 def create_enquiry(current_user):
     data = request.get_json()
@@ -206,7 +206,7 @@ def create_enquiry(current_user):
     return jsonify({"message": "Enquiry submitted", "enquiry_id": enquiry_id}), 201
 
 
-@purchases_bp.route("/api/enquiries", methods=["GET"])
+@purchases_bp.route("/enquiries", methods=["GET"])
 @token_req
 def get_user_enquiries(current_user):
     db = get_db()
@@ -233,7 +233,7 @@ def get_user_enquiries(current_user):
     return jsonify(enquiries), 200
 
 
-@purchases_bp.route("/api/enquiries/<int:enquiry_id>/reply", methods=["POST"])
+@purchases_bp.route("/enquiries/<int:enquiry_id>/reply", methods=["POST"])
 @token_req
 def reply_to_enquiry(current_user, enquiry_id):
     data = request.get_json()
@@ -262,7 +262,7 @@ def reply_to_enquiry(current_user, enquiry_id):
     return jsonify({"message": "Reply sent"})
 
 
-@purchases_bp.route("/api/admin/enquiries", methods=["GET"])
+@purchases_bp.route("/admin/enquiries", methods=["GET"])
 @token_req
 def get_all_enquiries(current_user):
     db = get_db()
@@ -299,7 +299,7 @@ def get_all_enquiries(current_user):
     return jsonify(enquiries)
 
 
-@purchases_bp.route("/api/enquiries/<int:enquiry_id>/userreply", methods=["POST"])
+@purchases_bp.route("/enquiries/<int:enquiry_id>/userreply", methods=["POST"])
 @token_req
 def reply_to_enquiry_user(current_user, enquiry_id):
     data = request.get_json()
@@ -328,7 +328,7 @@ def reply_to_enquiry_user(current_user, enquiry_id):
     return jsonify({"message": "Reply sent"})
 
 
-@purchases_bp.route("/api/products/<int:product_id>/purchased", methods=["GET"])
+@purchases_bp.route("/products/<int:product_id>/purchased", methods=["GET"])
 @token_req
 def has_purchased(current_user, product_id):
     db = get_db()
@@ -347,7 +347,7 @@ def has_purchased(current_user, product_id):
     return jsonify({"purchased": purchased})
 
 
-@purchases_bp.route("/api/products/<int:product_id>/reviews/my", methods=["GET"])
+@purchases_bp.route("/products/<int:product_id>/reviews/my", methods=["GET"])
 @token_req
 def has_user_reviewed(current_user, product_id):
     db = get_db()

@@ -60,17 +60,17 @@ def validate_image_file(file):
     return True, None
 
 
-@products_bp.route("/api/uploads/images/<filename>")
+@products_bp.route("/uploads/images/<filename>")
 def serve_image_file(filename):
     return send_from_directory("uploads/images", filename)
 
 
-@products_bp.route("/api/uploads/models/<filename>")
+@products_bp.route("/uploads/models/<filename>")
 def serve_model_file(filename):
     return send_from_directory("uploads/models", filename)
 
 
-@products_bp.route("/api/admin/add_product", methods=["POST"])
+@products_bp.route("/admin/add_product", methods=["POST"])
 @token_req
 def add_product(current_user):
     db = get_db()
@@ -185,7 +185,7 @@ def add_product(current_user):
     )
 
 
-@products_bp.route("/api/products", methods=["get"])
+@products_bp.route("/products", methods=["get"])
 def get_products():
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -214,7 +214,7 @@ def get_products():
     return jsonify(products), 200
 
 
-@products_bp.route("/api/products/active", methods=["get"])
+@products_bp.route("/products/active", methods=["get"])
 def get_active_products():
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -244,7 +244,7 @@ def get_active_products():
     return jsonify(products), 200
 
 
-@products_bp.route("/api/categories", methods=["GET"])
+@products_bp.route("/categories", methods=["GET"])
 def get_categories():
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -254,7 +254,7 @@ def get_categories():
     return jsonify(categories), 200
 
 
-@products_bp.route("/api/admin/api/update_product/<int:product_id>", methods=["PUT"])
+@products_bp.route("/admin/api/update_product/<int:product_id>", methods=["PUT"])
 @token_req
 def update_product(current_user, product_id):
     db = get_db()
@@ -425,7 +425,7 @@ def update_product(current_user, product_id):
     return jsonify({"message": "Product updated successfully"}), 200
 
 
-@products_bp.route("/api/admin/api/add_category", methods=["POST"])
+@products_bp.route("/admin/api/add_category", methods=["POST"])
 def add_category():
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -436,7 +436,7 @@ def add_category():
     return jsonify({"message": "Category added successfully"}), 200
 
 
-@products_bp.route("/api/categories_with_count", methods=["GET"])
+@products_bp.route("/categories_with_count", methods=["GET"])
 def get_categories_with_count():
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -454,7 +454,7 @@ def get_categories_with_count():
     return jsonify(categories), 200
 
 
-@products_bp.route("/api/search", methods=["GET"])
+@products_bp.route("/search", methods=["GET"])
 def search():
     query = request.args.get("q", "").strip()
 
@@ -476,7 +476,7 @@ def search():
         db.close()
 
 
-@products_bp.route("/api/products/<int:product_id>/reviews", methods=["POST"])
+@products_bp.route("/products/<int:product_id>/reviews", methods=["POST"])
 @token_req
 def add_product_review(current_user, product_id):
     db = get_db()
@@ -539,7 +539,7 @@ def add_product_review(current_user, product_id):
         cursor.close()
 
 
-@products_bp.route("/api/products/<int:product_id>/reviews", methods=["GET"])
+@products_bp.route("/products/<int:product_id>/reviews", methods=["GET"])
 def get_product_reviews(product_id):
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -600,7 +600,7 @@ def get_product_reviews(product_id):
         cursor.close()
 
 
-@products_bp.route("/api/products/<int:product_id>/reviews/stats", methods=["GET"])
+@products_bp.route("/products/<int:product_id>/reviews/stats", methods=["GET"])
 def get_review_stats(product_id):
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -638,7 +638,7 @@ def get_review_stats(product_id):
         cursor.close()
 
 
-@products_bp.route("/api/reviews/<int:review_id>", methods=["DELETE"])
+@products_bp.route("/reviews/<int:review_id>", methods=["DELETE"])
 @token_req
 def delete_review(current_user, review_id):
     db = get_db()
@@ -663,7 +663,7 @@ def delete_review(current_user, review_id):
         cursor.close()
 
 
-@products_bp.route("/api/products/<int:product_id>", methods=["GET"])
+@products_bp.route("/products/<int:product_id>", methods=["GET"])
 def fetch_product(product_id):
     db = get_db()
     cursor = db.cursor(dictionary=True)
