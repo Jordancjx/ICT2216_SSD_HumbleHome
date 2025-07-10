@@ -12,8 +12,12 @@ COPY . .
 
 # Ensure /app/logs exists, even if not in host
 RUN mkdir -p /app/logs
-
 RUN chmod -R 777 /app/logs
+
+# Create uploads folders and set permissions so www-data can write
+RUN mkdir -p /app/uploads/models /app/uploads/images
+RUN chown -R www-data:www-data /app/uploads
+RUN chmod -R u+rwX /app/uploads
 
 # Set correct permissions after COPY step
 RUN chown -R www-data:www-data /app && chmod -R u+rwX /app/logs
