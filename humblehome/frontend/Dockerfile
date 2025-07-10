@@ -23,4 +23,7 @@ COPY ssl.conf /etc/nginx/conf.d/ssl.conf
 # Expose HTTP and HTTPS ports
 EXPOSE 80 443
 
+# Switch to non-root user
+USER www-data
+
 CMD ["nginx", "-g", "daemon off;"]
