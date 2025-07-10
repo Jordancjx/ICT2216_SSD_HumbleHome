@@ -13,6 +13,8 @@ COPY . .
 # Ensure /app/logs exists, even if not in host
 RUN mkdir -p /app/logs
 
+RUN chmod -R 777 /app/logs
+
 # Set correct permissions after COPY step
 RUN chown -R www-data:www-data /app && chmod -R u+rwX /app/logs
 
