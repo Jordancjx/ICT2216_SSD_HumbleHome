@@ -302,6 +302,12 @@ function AdminDashboard({ user, setUser }) {
     e.preventDefault();
     const data = new FormData();
 
+    console.log({
+      model_file: formData.model_file,
+      thumbnail: formData.thumbnail,
+      images: formData.images,
+    });
+
     data.append("name", formData.name);
     data.append("price", formData.price);
     data.append("description", formData.description);
