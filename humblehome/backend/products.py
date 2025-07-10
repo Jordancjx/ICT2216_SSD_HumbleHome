@@ -90,10 +90,6 @@ def add_product(current_user):
     os.makedirs(upload_models_folder, exist_ok=True)
     os.makedirs(upload_images_folder, exist_ok=True)
     
-    return jsonify({
-        "form": {key: request.form.get(key) for key in request.form},
-        "files": {key: (request.files.get(key).filename if request.files.get(key) else None) for key in request.files}
-    }), 200
 
     # Validate all files submitted
     if not all([name, price, description, category, stock, model_file]):
