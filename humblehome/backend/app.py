@@ -69,7 +69,7 @@ if __name__ == "__main__":
 
         UPLOAD_FOLDER = "uploads/models"
         os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-        app.run(host="0.0.0.0", port=5000)
+        app.run(host="0.0.0.0", port=8888)
         logger.info("Flask app ended/shutdown.")
     except Exception as e:
         logger.exception(f"Error starting Flask app: {e}")
