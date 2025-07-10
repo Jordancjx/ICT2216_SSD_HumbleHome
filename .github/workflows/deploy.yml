@@ -25,7 +25,7 @@ jobs:
           ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << EOF
             sudo mkdir -p /home/${{ secrets.EC2_USER }}/app/var/log/humblehome
             sudo chmod -R 777 /home/${{ secrets.EC2_USER }}/app/var/log/humblehome
-            sudo chmod -R 777 /home/${{ secrets.EC2_USER }}/ICT2216_SSD_HumbleHome/uploads
+            sudo chmod -R 777 /home/${{ secrets.EC2_USER }}/ICT2216_SSD_HumbleHome/humblehome/uploads
           EOF
 
       - name: Upload source code to EC2
