@@ -232,7 +232,7 @@ const handlePasswordChange = async (e) => {
         address: user.address || "",
       });
 
-      setImageUrl(`uploads/image/${user.profile_pic}`);
+      setImageUrl(`uploads/images/${user.profile_pic}`);
     }
   }, [user, navigate]);
 
