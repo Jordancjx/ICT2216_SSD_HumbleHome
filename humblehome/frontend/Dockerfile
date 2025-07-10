@@ -1,29 +1,26 @@
-FROM node:18
+# Build stage
+FROM node:18 AS build
 
-# Create the www-data user if it doesn't already exist (www-data group apparently already exists in the node image)
-# Ensures that if the www-data user already exists, it won't throw an error and will simply skip that step
-RUN useradd -r -g www-data www-data || true 
-
-# Set the working directory
 WORKDIR /app
 
-# Copy the package files
 COPY package.json package-lock.json ./
-
-# Install the dependencies
 RUN npm install
 
-# Expose the port
-EXPOSE 3000
-
-# Copy the rest of the application
 COPY . .
+RUN npm run build
 
-# # Change ownership of the application files to the www-data user
-# RUN chown -R www-data:www-data /app
+# Production stage
+FROM nginx:stable-alpine
+RUN apk add --no-cache openssl
 
-# # Switch to the www-data user
-# USER www-data
+# Copy React build to Nginx html folder
+COPY --from=build /app/build /usr/share/nginx/html
 
-# Run the application
-CMD ["npm", "start"]
+# Copy SSL config and certificates
+COPY 00-rate-limit.conf /etc/nginx/conf.d/00-rate-limit.conf
+COPY ssl.conf /etc/nginx/conf.d/ssl.conf
+
+# Expose HTTP and HTTPS ports
+EXPOSE 80 443
+
+CMD ["nginx", "-g", "daemon off;"]
