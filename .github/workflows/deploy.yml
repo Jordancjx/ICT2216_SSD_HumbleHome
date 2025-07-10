@@ -20,16 +20,17 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Upload source code to EC2
-        run: |
-          rsync -az -e "ssh -i ~/.ssh/id_rsa -p 22" ./ ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USER }}/ICT2216_SSD_HumbleHome
-      
       - name: Fix file permissions on EC2
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << EOF
             sudo mkdir -p /home/${{ secrets.EC2_USER }}/app/var/log/humblehome
             sudo chmod -R 777 /home/${{ secrets.EC2_USER }}/app/var/log/humblehome
           EOF
+
+      - name: Upload source code to EC2
+        run: |
+          rsync -az -e "ssh -i ~/.ssh/id_rsa -p 22" ./ ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USER }}/ICT2216_SSD_HumbleHome
+    
 
 
       - name: Start Docker on EC2
