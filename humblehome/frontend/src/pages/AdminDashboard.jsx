@@ -341,16 +341,23 @@ function AdminDashboard({ user, setUser }) {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-
     if (name === "images") {
-      const validFiles = Array.from(files).filter(validateImageFile);
-      setFormData((prev) => ({ ...prev, images: validFiles }));
-    } else if (name === "thumbnail") {
-      if (validateImageFile(files[0])) {
-        setFormData((prev) => ({ ...prev, thumbnail: files[0] }));
-      }
+      setFormData((prev) => ({
+        ...prev,
+        images: Array.from(files),
+      }));
+    } else if (files && files.length > 0) {
+      console.log(`File input ${name}:`, files[0]);
+      setFormData((prev) => ({
+        ...prev,
+        [name]: files[0],
+      }));
     } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+      console.log(`Non-file input ${name}:`, value);
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
     }
   };
 
@@ -656,6 +663,7 @@ function AdminDashboard({ user, setUser }) {
                 required
                 className="border px-3 py-2 rounded"
               />
+
               <label className="text-sm text-gray-600">Upload Thumbnail</label>
               <input
                 type="file"
