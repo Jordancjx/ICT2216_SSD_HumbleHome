@@ -324,6 +324,7 @@ function AdminDashboard({ user, setUser }) {
 
     const response = await res.json();
     if (res.ok) {
+      console.log(response);
       setShowModal(false);
       fetchProducts();
       toast.success("Product added successfully!");
