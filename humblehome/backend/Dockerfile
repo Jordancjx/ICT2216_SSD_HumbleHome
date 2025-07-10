@@ -6,18 +6,18 @@ ENV FLASK_RUN_HOST=0.0.0.0
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
-EXPOSE 8888
+
+# Copy all app source code (including /logs if it exists locally)
 COPY . .
 
-# Assuming working directory is /app
-WORKDIR /app
+# Ensure /app/logs exists, even if not in host
+RUN mkdir -p /app/logs
 
-# Create logs directory with open permissions (or set to appropriate user)
-RUN mkdir -p logs && chmod -R 777 logs
+# Set correct permissions after COPY step
+RUN chown -R www-data:www-data /app && chmod -R u+rwX /app/logs
 
-# Change ownership of app files to www-data
-RUN chown -R www-data:www-data /app
-
-# Switch to www-data user
+# Switch to non-root user
 USER www-data
-CMD ["flask", "run", "--debug"]
+
+EXPOSE 8888
+CMD ["python3", "app.py"]
