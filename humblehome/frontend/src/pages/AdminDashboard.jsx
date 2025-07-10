@@ -13,10 +13,8 @@ function AdminDashboard({ user, setUser }) {
   const [enquiries, setEnquiries] = useState([]);
   const [replyMessage, setReplyMessage] = useState("");
 
-  const sanitizeInput = (str) =>
-    str.replace(/[<>\/\\'"`]/g, "").trim();
-  const isValidMessage = (str) =>
-    str.length >= 5 && str.length <= 1000;
+  const sanitizeInput = (str) => str.replace(/[<>\/\\'"`]/g, "").trim();
+  const isValidMessage = (str) => str.length >= 5 && str.length <= 1000;
 
   //Modals states
   const [showEditModal, setShowEditModal] = useState(false);
@@ -95,7 +93,7 @@ function AdminDashboard({ user, setUser }) {
   }, [showModal, showEditModal, showAddCategoryModal]);
 
   const validateImageFile = (file) => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
     const maxSize = 3 * 1024 * 1024; // 3MB
 
     if (!allowedTypes.includes(file.type)) {
@@ -110,7 +108,6 @@ function AdminDashboard({ user, setUser }) {
 
     return true;
   };
-
 
   const handleEditChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -341,11 +338,12 @@ function AdminDashboard({ user, setUser }) {
     if (name === "images") {
       const validFiles = Array.from(files).filter(validateImageFile);
       setFormData((prev) => ({ ...prev, images: validFiles }));
-    }
-    if (name === "thumbnail") {
+    } else if (name === "thumbnail") {
       if (validateImageFile(files[0])) {
         setFormData((prev) => ({ ...prev, thumbnail: files[0] }));
       }
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
