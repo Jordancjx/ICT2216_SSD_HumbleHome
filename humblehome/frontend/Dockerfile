@@ -17,6 +17,7 @@ RUN apk add --no-cache openssl
 COPY --from=build /app/build /usr/share/nginx/html
 
 # Copy SSL config and certificates
+COPY 00-rate-limit.conf /etc/nginx/conf.d/00-rate-limit.conf
 COPY ssl.conf /etc/nginx/conf.d/ssl.conf
 
 # Expose HTTP and HTTPS ports
