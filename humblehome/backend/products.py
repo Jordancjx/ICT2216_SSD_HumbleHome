@@ -8,7 +8,7 @@ import json
 import logging
 import re
 
-MAX_IMAGE_SIZE = 3 * 1024 * 1024  # 3MB
+MAX_IMAGE_SIZE = 5 * 1024 * 1024  # 5MB
 
 logger = logging.getLogger("humblehome_logger")  # Custom logger
 secretkey = "supersecretkey"
