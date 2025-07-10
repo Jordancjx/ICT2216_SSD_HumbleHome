@@ -3,7 +3,7 @@ name: Deploy to EC2 on Push
 on:
   push:
     branches:
-      - ec2-deployment-2
+      - deployment
 
 jobs:
   deploy:
