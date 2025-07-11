@@ -117,7 +117,7 @@ function Profile({ user, setUser }) {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ cleanMessage }),
+        body: JSON.stringify({ "message":cleanMessage }),
       });
 
       const data = await res.json();
