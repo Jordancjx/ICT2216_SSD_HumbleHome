@@ -9,3 +9,12 @@ black
 Selenium
 chromedriver-autoinstaller
 requests
+dotenv
+black==25.1.0
+flake8==7.3.0
+flask-cors==6.0.0
+mysql-connector-python==9.3.0
+pillow==11.0.0
+requests==2.32.3
+requests-oauthlib==2.0.0
+selenium==4.34.2

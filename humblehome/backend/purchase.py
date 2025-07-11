@@ -69,13 +69,42 @@ def checkout(current_user):
         order_id = cursor.lastrowid
 
         for item in cart:
+            product_id = item["product_id"]
+            quantity = item["quantity"]
+            price = item["price"]
+
+            # Fetch current stock
+            cursor.execute(
+                """SELECT stock FROM products
+                           WHERE id = %s FOR UPDATE""",
+                (product_id,),
+            )
+            product = cursor.fetchone()
+
+            if not product:
+                raise BadRequest(f"Product with ID {product_id} not found.")
+
+            current_stock = product["stock"]
+            if current_stock < quantity:
+                raise BadRequest(
+                    f"""Not enough stock for product ID {product_id}.
+                                 Only {current_stock} left."""
+                )
+
+            # Insert into order_items
             cursor.execute(
                 """
                 INSERT INTO order_items
                 (order_id, product_id, quantity, price_at_purchase)
                 VALUES (%s, %s, %s, %s)
-            """,
-                (order_id, item["product_id"], item["quantity"], item["price"]),
+                """,
+                (order_id, product_id, quantity, price),
+            )
+
+            # Update product stock
+            cursor.execute(
+                "UPDATE products SET stock = stock - %s WHERE id = %s",
+                (quantity, product_id),
             )
 
         logger.info(f"Order items added to \"{current_user['username']}\" order.")

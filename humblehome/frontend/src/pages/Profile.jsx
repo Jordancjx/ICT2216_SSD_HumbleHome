@@ -23,114 +23,89 @@ function Profile({ user, setUser }) {
   const [enquiries, setEnquiries] = useState([]);
   const [replyInputs, setReplyInputs] = useState({});
 
-  const sanitizeInput = (str) =>
-    str.replace(/[<>\/\\'"`]/g, "").trim();
-
-  const isValidMessage = (str) =>
-    str.length >= 5 && str.length <= 1000;
+  const sanitizeInput = (str) => str.replace(/[<>/\\'"]/g, "").trim();
+  const isValidMessage = (str) => str.length >= 5 && str.length <= 1000;
 
   const [passwordData, setPasswordData] = useState({
-  currentPassword: '',
-  newPassword: '',
-  confirmPassword: ''
-});
-const [error, setError] = useState('');
-const [success, setSuccess] = useState('');
-const [isLoading, setIsLoading] = useState(false);
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-const handlePasswordInputChange = (e) => {
-  const { name, value } = e.target;
-  setPasswordData(prev => ({ ...prev, [name]: value }));
-  // Clear errors when user types
-  if (error) setError('');
-};
+  const handlePasswordInputChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordData((prev) => ({ ...prev, [name]: value }));
+    if (error) setError("");
+  };
 
-const handlePasswordChange = async (e) => {
-  e.preventDefault();
-  setIsLoading(true);
-  setError('');
-  setSuccess('');
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+    setSuccess("");
 
-  // Frontend validation
-  if (passwordData.newPassword !== passwordData.confirmPassword) {
-    setError('New passwords do not match');
-    setIsLoading(false);
-    return;
-  }
-
-  if (passwordData.newPassword.length < 8) {
-    setError('Password must be at least 8 characters');
-    setIsLoading(false);
-    return;
-  }
-
-  try {
-    const response = await fetch('/api/change-password', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}` // Adjust based on your auth
-      },
-      body: JSON.stringify({
-        currentPassword: passwordData.currentPassword,
-        newPassword: passwordData.newPassword,
-        confirmPassword: passwordData.confirmPassword
-      })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || 'Failed to change password');
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      setError("New passwords do not match");
+      setIsLoading(false);
+      return;
     }
 
-    setSuccess('Password changed successfully!');
-    setPasswordData({
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: ''
-    });
-  } catch (err) {
-    setError(err.message);
-  } finally {
-    setIsLoading(false);
-  }
-};
+    if (passwordData.newPassword.length < 8) {
+      setError("Password must be at least 8 characters");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/change-password", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(passwordData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) throw new Error(data.error || "Failed to change password");
+
+      setSuccess("Password changed successfully!");
+      setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     const fetchEnquiries = async () => {
       if (tab === "enquiries" && user) {
         const token = localStorage.getItem("token");
         try {
           const res = await fetch("/api/enquiries", {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
           });
           const data = await res.json();
-          console.log(data);
           setEnquiries(data);
-        } catch (error) {
+        } catch (err) {
           toast.error("Failed to fetch enquiries.");
-          console.error(error);
         }
       }
     };
-
     fetchEnquiries();
   }, [tab, user]);
 
   const handleReplySubmit = async (enquiryId) => {
     const token = localStorage.getItem("token");
     const message = replyInputs[enquiryId];
-
-    if (!message) {
-      toast.error("Reply message cannot be empty.");
-      return;
-    }
     const cleanMessage = sanitizeInput(message || "");
 
-    if (!isValidMessage(cleanMessage)) {
+    if (!cleanMessage || !isValidMessage(cleanMessage)) {
       toast.error("Message must be 5–1000 characters.");
       return;
     }
@@ -148,38 +123,28 @@ const handlePasswordChange = async (e) => {
       const data = await res.json();
       if (res.ok) {
         toast.success("Reply sent!");
-
-        // Clear input
         setReplyInputs((prev) => ({ ...prev, [enquiryId]: "" }));
-
-        // Optionally refetch enquiries to reflect new message
-        setTab("reload"); // Triggers re-fetch
+        setTab("reload");
         setTimeout(() => setTab("enquiries"), 50);
       } else {
         toast.error(data.error || "Failed to send reply.");
       }
-    } catch (error) {
+    } catch (err) {
       toast.error("Something went wrong.");
-      console.error(error);
     }
   };
 
   useEffect(() => {
     const fetchHistory = async () => {
       if (tab === "history" && user) {
-        var token = localStorage.getItem("token");
+        const token = localStorage.getItem("token");
         try {
           const res = await fetch("/api/purchase-history", {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
           });
           const data = await res.json();
-          console.log(data);
           setPurchaseHistory(data);
-        } catch (error) {
-          console.error("Failed to fetch history:", error);
+        } catch (err) {
           toast.error("Could not load purchase history.");
         }
       }
@@ -192,9 +157,7 @@ const handlePasswordChange = async (e) => {
           const res = await fetch(
             `/api/my-reviews?page=${page}&per_page=${itemsPerPage}`,
             {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
+              headers: { Authorization: `Bearer ${token}` },
             }
           );
           const data = await res.json();
@@ -202,10 +165,9 @@ const handlePasswordChange = async (e) => {
             setMyReviews(data.reviews);
             setTotalPages(data.total_pages || 1);
           } else {
-            setMyReviews([]);
             toast.error("Unexpected review data.");
           }
-        } catch (error) {
+        } catch (err) {
           toast.error("Failed to load your reviews.");
         }
       }
@@ -217,8 +179,6 @@ const handlePasswordChange = async (e) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
-    // Redirect if no user or no token
     if (!user || !token) {
       toast.error("Please log in to access your profile.");
       navigate("/login");
@@ -243,32 +203,30 @@ const handlePasswordChange = async (e) => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
-
     const res = await fetch("/api/update-profile", {
       method: "PUT",
       headers: {
-        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(formData),
     });
 
     if (res.ok) {
       toast.success("Profile Updated successfully!");
-      const updatedUser = {
+      setUser({
         ...user,
         full_name: formData.fullname,
         phone_number: formData.phonenumber,
         address: formData.address,
-      };
-      setUser(updatedUser);
+      });
     }
   };
 
   const handleImageUpload = async () => {
     const token = localStorage.getItem("token");
-    const formData = new FormData();
-    formData.append("image", file);
+    const form = new FormData();
+    form.append("image", file);
 
     try {
       const response = await fetch("/api/upload-profile-image", {
@@ -276,23 +234,16 @@ const handlePasswordChange = async (e) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        body: formData,
+        body: form,
       });
 
-      try {
-        const data = await response.json();
-        if (response.ok) {
-          setImageUrl(`uploads/image${data.filename}`);
-          setUser({ ...user, profile_pic: data.filename });
-          console.log(data);
-          // alert("Image Uploaded!");
-          toast.success("Image uploaded successfully!");
-        } else {
-          // alert(data.error || "Failed to upload");
-          toast.error(data.error || "Failed to upload");
-        }
-      } catch (jsonError) {
-        toast.error("File size exceeds the maximum limit of 3MB.");
+      const data = await response.json();
+      if (response.ok) {
+        setImageUrl(`uploads/image/${data.filename}`);
+        setUser({ ...user, profile_pic: data.filename });
+        toast.success("Image uploaded successfully!");
+      } else {
+        toast.error(data.error || "Failed to upload");
       }
     } catch (error) {
       toast.error("Failed to upload image. Please try again.");
@@ -306,19 +257,16 @@ const handlePasswordChange = async (e) => {
     try {
       const res = await fetch(`/api/reviews/${reviewId}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
-        setMyReviews(myReviews.filter((review) => review.id !== reviewId));
+        setMyReviews(myReviews.filter((r) => r.id !== reviewId));
         toast.success("Review deleted successfully.");
       } else {
         const errorData = await res.json();
         toast.error(errorData.error || "Failed to delete review.");
       }
-    } catch (error) {
-      console.error("Error deleting review:", error);
+    } catch (err) {
       toast.error("An error occurred while deleting the review.");
     }
   };
@@ -326,11 +274,12 @@ const handlePasswordChange = async (e) => {
   if (!user) return <p className="p-4">Loading...</p>;
 
   return (
-    <main className="flex w-5/6 px-8 py-4">
-      <div className="w-full flex-col mx-auto p-6 bg-white shadow rounded">
-        <div className="profile-header w-full flex">
+    <main className="flex justify-center px-4 sm:px-8 py-4">
+      <div className="w-full max-w-4xl flex flex-col mx-auto p-6 bg-white shadow rounded">
+        {/* Profile Header */}
+        <div className="profile-header w-full flex flex-col sm:flex-row items-center sm:items-start gap-4">
           {imageUrl && (
-            <div className="my-4 mr-2">
+            <div className="my-4">
               <img
                 src={`api/${imageUrl}`}
                 alt="Profile"
@@ -338,64 +287,36 @@ const handlePasswordChange = async (e) => {
               />
             </div>
           )}
-          <div className="flex flex-col justify-end">
+          <div className="flex flex-col justify-center sm:justify-start text-center sm:text-left">
             <h3 className="text-2xl font-bold">{user.username}</h3>
             <p className="text-sm/6">{user.email}</p>
           </div>
         </div>
 
-        <div className="flex space-x-4 mb-6 border-b mt-5 pb-2">
-          <button
-            className={`px-4 py-2 rounded-t font-semibold ${
-              tab === "profile"
-                ? "border-b-2 border-orange-500 text-orange-600"
-                : "text-gray-600 hover:text-orange-500"
-            }`}
-            onClick={() => setTab("profile")}
-          >
-            Update Info
-          </button>
-          <button
-            className={`px-4 py-2 rounded-t font-semibold ${
-              tab === "history"
-                ? "border-b-2 border-orange-500 text-orange-600"
-                : "text-gray-600 hover:text-orange-500"
-            }`}
-            onClick={() => setTab("history")}
-          >
-            Purchase History
-          </button>
-          <button
-            className={`px-4 py-2 rounded-t font-semibold ${
-              tab === "enquiries"
-                ? "border-b-2 border-orange-500 text-orange-600"
-                : "text-gray-600 hover:text-orange-500"
-            }`}
-            onClick={() => setTab("enquiries")}
-          >
-            Enquiries
-          </button>
-          <button
-            className={`px-4 py-2 rounded-t font-semibold ${
-              tab === "security"
-                ? "border-b-2 border-orange-500 text-orange-600"
-                : "text-gray-600 hover:text-orange-500"
-            }`}
-            onClick={() => setTab("security")}
-          >
-            Change Password
-          </button>
-          <button
-            className={`px-4 py-2 rounded-t font-semibold ${
-              tab === "myreviews"
-                ? "border-b-2 border-orange-500 text-orange-600"
-                : "text-gray-600 hover:text-orange-500"
-            }`}
-            onClick={() => setTab("myreviews")}
-          >
-            My Reviews
-          </button>
+        {/* Tabs */}
+        <div className="flex flex-wrap space-x-2 space-y-2 mb-6 border-b mt-5 pb-2">
+          {[
+            { id: "profile", label: "Update Info" },
+            { id: "history", label: "Purchase History" },
+            { id: "enquiries", label: "Enquiries" },
+            { id: "security", label: "Change Password" },
+            { id: "myreviews", label: "My Reviews" },
+          ].map(({ id, label }) => (
+            <button
+              key={id}
+              className={`min-w-[100px] px-4 py-2 rounded-t font-semibold ${
+                tab === id
+                  ? "border-b-2 border-orange-500 text-orange-600"
+                  : "text-gray-600 hover:text-orange-500"
+              }`}
+              onClick={() => setTab(id)}
+            >
+              {label}
+            </button>
+          ))}
         </div>
+
+        {/* Tab Content */}
 
         {tab === "profile" && (
           <>
@@ -403,6 +324,7 @@ const handlePasswordChange = async (e) => {
               type="file"
               accept="image/*"
               onChange={(e) => setFile(e.target.files[0])}
+              className="mb-2"
             />
             <button
               onClick={handleImageUpload}
@@ -468,9 +390,9 @@ const handlePasswordChange = async (e) => {
                   key={order.order_id}
                   className="border rounded p-4 shadow-sm bg-gray-50"
                 >
-                  <div className="flex justify-between items-center border-b pb-2">
+                  <div className="flex justify-between items-center border-b pb-2 flex-col sm:flex-row sm:items-center">
                     <h4 className="font-semibold">Order #{order.order_id}</h4>
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-gray-600 mt-1 sm:mt-0">
                       {new Date(order.order_date).toLocaleString()}
                     </span>
                   </div>
@@ -495,11 +417,11 @@ const handlePasswordChange = async (e) => {
                     ))}
                   </div>
 
-                  <div className="mt-3 text-sm text-gray-600">
+                  <div className="mt-3 text-sm text-gray-600 flex flex-col sm:flex-row sm:space-x-4">
                     <span>
                       <strong>Status:</strong> {order.status}
                     </span>
-                    <span className="ml-4">
+                    <span className="mt-1 sm:mt-0">
                       <strong>Total:</strong> $
                       {Number(order.total_amount).toFixed(2)}
                     </span>
@@ -520,8 +442,8 @@ const handlePasswordChange = async (e) => {
                   key={review.id}
                   className="border rounded p-4 shadow-sm bg-blue-50"
                 >
-                  <div className="flex justify-between items-center">
-                    <div>
+                  <div className="flex justify-between items-center flex-col sm:flex-row sm:items-center">
+                    <div className="text-center sm:text-left">
                       <h4 className="font-semibold">{review.product_name}</h4>
                       <p className="text-sm text-gray-600">
                         {new Date(review.created_at).toLocaleString()}
@@ -529,12 +451,12 @@ const handlePasswordChange = async (e) => {
                     </div>
                     <button
                       onClick={() => handleDeleteReview(review.id)}
-                      className="text-red-600 hover:underline text-sm"
+                      className="text-red-600 hover:underline text-sm mt-2 sm:mt-0"
                     >
                       Delete
                     </button>
                   </div>
-                  <p className="text-yellow-500 text-sm">
+                  <p className="text-yellow-500 text-sm mt-2">
                     {"★".repeat(review.rating)}{" "}
                     <span className="text-gray-300">
                       {"★".repeat(5 - review.rating)}
@@ -596,7 +518,7 @@ const handlePasswordChange = async (e) => {
                   <textarea
                     rows="2"
                     placeholder="Type your reply..."
-                    className="w-full p-2 border rounded mb-2"
+                    className="w-full p-2 border rounded mb-2 resize-none"
                     value={replyInputs[enq.enquiry_id] || ""}
                     onChange={(e) =>
                       setReplyInputs((prev) => ({
@@ -607,7 +529,7 @@ const handlePasswordChange = async (e) => {
                   />
                   <button
                     onClick={() => handleReplySubmit(enq.enquiry_id)}
-                    className="px-4 py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600"
+                    className="w-full sm:w-auto px-4 py-2 text-sm text-white bg-orange-500 rounded hover:bg-orange-600"
                   >
                     Send Reply
                   </button>
@@ -616,106 +538,82 @@ const handlePasswordChange = async (e) => {
             )}
           </div>
         )}
+
         {tab === "security" && (
-  <div className="mt-4 space-y-6">
-    <div className="border rounded p-4 shadow-sm bg-gray-50">
-      <h3 className="font-semibold text-lg mb-4">Change Password</h3>
-      
-      <form className="space-y-4" onSubmit={handlePasswordChange}>
-        <div>
-          <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-1">
-            Current Password
-          </label>
-          <input
-            type="password"
-            id="currentPassword"
-            name="currentPassword"
-            value={passwordData.currentPassword}
-            onChange={handlePasswordInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-            placeholder="Enter your current password"
-            required
-          />
-        </div>
-        
-        <div>
-          <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-1">
-            New Password
-          </label>
-          <input
-            type="password"
-            id="newPassword"
-            name="newPassword"
-            value={passwordData.newPassword}
-            onChange={handlePasswordInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-            placeholder="Enter your new password (min 8 characters)"
-            required
-          />
-        </div>
-        
-        <div>
-          <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-            Confirm New Password
-          </label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={passwordData.confirmPassword}
-            onChange={handlePasswordInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-            placeholder="Confirm your new password"
-            required
-          />
-        </div>
+          <form
+            onSubmit={handlePasswordChange}
+            className="flex flex-col items-center space-y-6 mt-4"
+          >
+            <input
+              type="password"
+              name="currentPassword"
+              placeholder="Current Password"
+              value={passwordData.currentPassword}
+              onChange={handlePasswordInputChange}
+              className="w-full max-w-md rounded-md border p-2 text-black"
+            />
+            <input
+              type="password"
+              name="newPassword"
+              placeholder="New Password"
+              value={passwordData.newPassword}
+              onChange={handlePasswordInputChange}
+              className="w-full max-w-md rounded-md border p-2 text-black"
+            />
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm New Password"
+              value={passwordData.confirmPassword}
+              onChange={handlePasswordInputChange}
+              className="w-full max-w-md rounded-md border p-2 text-black"
+            />
+            {error && <p className="text-red-600">{error}</p>}
+            {success && <p className="text-green-600">{success}</p>}
 
-        {error && (
-          <div className="text-red-500 text-sm">{error}</div>
+            <button
+              type="submit"
+              className="flex justify-center items-center px-8 py-2 bg-orange-500 rounded-md text-white font-semibold hover:bg-orange-600 disabled:opacity-50"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8z"
+                    ></path>
+                  </svg>
+                  Changing...
+                </>
+              ) : (
+                "Change Password"
+              )}
+            </button>
+          </form>
         )}
-
-        {success && (
-          <div className="text-green-500 text-sm">{success}</div>
-        )}
-        
-        <button
-          type="submit"
-          disabled={isLoading}
-          className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
-        >
-          {isLoading ? (
-            <>
-              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Changing...
-            </>
-          ) : (
-            'Change Password'
-          )}
-        </button>
-      </form>
-    </div>
-  </div>
-)}
       </div>
-        
     </main>
   );
 }
 
 Profile.propTypes = {
-  user: PropTypes.shape({
-    user_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    username: PropTypes.string,
-    email: PropTypes.string,
-    role: PropTypes.string,
-    full_name: PropTypes.string,
-    phone_number: PropTypes.string,
-    address: PropTypes.string,
-    profile_pic: PropTypes.string,
-  }),
-  setUser: PropTypes.func.isRequired,
+  user: PropTypes.object,
+  setUser: PropTypes.func,
 };
+
 export default Profile;

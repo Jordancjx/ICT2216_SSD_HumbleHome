@@ -687,3 +687,104 @@ def fetch_product(product_id):
         return jsonify({"error": "Product not found or is inactive."}), 404
 
     return jsonify(product)
+
+
+@products_bp.route("/api/admin/delete_product/<int:product_id>", methods=["DELETE"])
+@token_req
+def delete_product(current_user, product_id):
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    try:
+        cursor.execute(
+            """SELECT image_url FROM product_images
+                       WHERE product_id = %s""",
+            (product_id,),
+        )
+        image_paths = [row["image_url"] for row in cursor.fetchall()]
+
+        cursor.execute(
+            """DELETE FROM product_images
+                       WHERE product_id = %s""",
+            (product_id,),
+        )
+
+        cursor.execute("DELETE FROM products WHERE id = %s", (product_id,))
+
+        db.commit()
+
+        import os
+
+        for path in image_paths:
+            try:
+                os.remove(path)
+            except Exception as e:
+                print(f"Failed to delete {path}: {e}")
+
+        return (
+            jsonify({"message": "Product and related images deleted successfully"}),
+            200,
+        )
+
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": f"Failed to delete product: {str(e)}"}), 500
+
+
+@products_bp.route("/api/admin/update_order_status/<int:order_id>", methods=["PUT"])
+@token_req
+def update_order_status(current_user, order_id):
+    new_status = request.json.get("status")
+    valid_statuses = ["pending", "shipped", "delivered", "cancelled"]
+
+    if new_status not in valid_statuses:
+        return jsonify({"error": "Invalid status value"}), 400
+
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        cursor.execute(
+            "UPDATE orders SET status = %s WHERE order_id = %s", (new_status, order_id)
+        )
+        db.commit()
+
+        if cursor.rowcount == 0:
+            return jsonify({"error": "Order not found"}), 404
+
+        return jsonify({"message": "Order status updated"}), 200
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": str(e)}), 500
+    finally:
+        cursor.close()
+
+
+@products_bp.route("/api/admin/orders", methods=["GET"])
+@token_req
+def get_orders(current_user):
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    try:
+        cursor.execute(
+            """
+            SELECT
+                o.order_id,
+                u.username,
+                o.order_date,
+                o.status,
+                o.total_amount,
+                o.shipping_address,
+                o.payment_method
+            FROM orders o
+            JOIN users u ON o.user_id = u.user_id
+            ORDER BY o.order_date DESC
+        """
+        )
+        orders = cursor.fetchall()
+        return jsonify(orders), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        cursor.close()

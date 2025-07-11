@@ -6,7 +6,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import AdminRoute from "./components/AdminRoute";
 import UserRoute from "./components/UserRoute";
-
+import PaymentConfirmation from "./pages/PaymentConfirmation.jsx";
 import HomePage from "./pages/HomePage";
 import ProductDetail from "./pages/ProductDetail";
 import Login from "./pages/Login";
@@ -100,35 +100,63 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/product/:id" element={<ProductDetail user={user} />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login setUser={setUser} fetchProfile={fetchProfile} />} />
-          <Route path="/verify-otp" element={<VerifyOtp setUser={setUser} fetchProfile={fetchProfile} />} />
-          <Route path="/forgotpassword" element={<ForgotPassword setUser={setUser} fetchProfile={fetchProfile} />} />
-          <Route path="/reset-password/confirm" element={<PasswordResetConfirmation />} />
+          <Route
+            path="/login"
+            element={<Login setUser={setUser} fetchProfile={fetchProfile} />}
+          />
+          <Route
+            path="/verify-otp"
+            element={
+              <VerifyOtp setUser={setUser} fetchProfile={fetchProfile} />
+            }
+          />
+          <Route
+            path="/forgotpassword"
+            element={
+              <ForgotPassword setUser={setUser} fetchProfile={fetchProfile} />
+            }
+          />
+          <Route
+            path="/reset-password/confirm"
+            element={<PasswordResetConfirmation />}
+          />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
-          
-          <Route path="/admin" element={
-            <AdminRoute user={user} loading={loadingUser}>
-              <AdminDashboard user={user} setUser={setUser} />
-            </AdminRoute>
-          } />
 
-          <Route path="/cart" element={
-            <UserRoute user={user} loading={loadingUser}>
-              <Cart user={user} />
-            </UserRoute>
-          } />
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute user={user} loading={loadingUser}>
+                <AdminDashboard user={user} setUser={setUser} />
+              </AdminRoute>
+            }
+          />
 
-          <Route path="/contact" element={
-            <UserRoute user={user} loading={loadingUser}>
-              <Contact user={user} />
-            </UserRoute>
-          } />
+          <Route
+            path="/cart"
+            element={
+              <UserRoute user={user} loading={loadingUser}>
+                <Cart user={user} />
+              </UserRoute>
+            }
+          />
 
-          <Route path="/profile" element={
-            <UserRoute user={user} loading={loadingUser}>
-              <Profile user={user} setUser={setUser} />
-            </UserRoute>
-          } />
+          <Route
+            path="/contact"
+            element={
+              <UserRoute user={user} loading={loadingUser}>
+                <Contact user={user} />
+              </UserRoute>
+            }
+          />
+
+          <Route
+            path="/profile"
+            element={
+              <UserRoute user={user} loading={loadingUser}>
+                <Profile user={user} setUser={setUser} />
+              </UserRoute>
+            }
+          />
 
           <Route
             path="/hhpanel"
@@ -136,22 +164,42 @@ export default function App() {
               <AdminLogin setUser={setUser} fetchProfile={fetchProfile} />
             }
           />
-          
-          <Route path="/payment" element={
-            <UserRoute user={user} loading={loadingUser}>
-              <Payment user={user} />
-            </UserRoute>
-          } />
 
-          <Route path="/hhpanel" element={<AdminLogin setUser={setUser} fetchProfile={fetchProfile} />} />
+          <Route
+            path="/payment"
+            element={
+              <UserRoute user={user} loading={loadingUser}>
+                <Payment user={user} />
+              </UserRoute>
+            }
+          />
+
+          <Route
+            path="/payment/confirmation"
+            element={
+              <UserRoute user={user} loading={loadingUser}>
+                <PaymentConfirmation />
+              </UserRoute>
+            }
+          />
+
+          <Route
+            path="/hhpanel"
+            element={
+              <AdminLogin setUser={setUser} fetchProfile={fetchProfile} />
+            }
+          />
         </Routes>
 
         {showSessionModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white p-6 rounded-md shadow-md text-center max-w-sm">
-              <h2 className="text-lg font-semibold text-red-600 mb-2">Session Expired</h2>
+              <h2 className="text-lg font-semibold text-red-600 mb-2">
+                Session Expired
+              </h2>
               <p className="text-sm text-gray-600 mb-4">
-                You were logged out for being inactive for 15 minutes. Please log in again.
+                You were logged out for being inactive for 15 minutes. Please
+                log in again.
               </p>
               <button
                 onClick={() => {

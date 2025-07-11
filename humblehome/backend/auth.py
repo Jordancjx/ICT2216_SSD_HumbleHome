@@ -11,17 +11,19 @@ from db import get_db
 from middleware import token_req
 import smtplib
 from email.mime.text import MIMEText
+from dotenv import load_dotenv
 
+load_dotenv()
 
 logger = logging.getLogger("humblehome_logger")  # Custom logger
-secretkey = "supersecretkey"
+secretkey = os.getenv("SECRET_KEY")
 auth_bp = Blueprint("auth", __name__)
 
-SMTP_SERVER = "smtp.gmail.com"
-SMTP_PORT = 587
-SMTP_USERNAME = "ictssd4321@gmail.com"
-SMTP_PASSWORD = "qhuy iszs sgql bipm"  # Consider loading from env vars
-FROM_EMAIL = "noreply@yourdomain.com"
+SMTP_SERVER = os.getenv("SMTP_SERVER")
+SMTP_PORT = os.getenv("SMTP_PORT")
+SMTP_USERNAME = os.getenv("SMTP_USERNAME")
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
+FROM_EMAIL = os.getenv("FROM_EMAIL")
 
 # Configuration - should be in environment variables
 RESET_TOKEN_EXPIRY = 3600  # 1 hour in seconds

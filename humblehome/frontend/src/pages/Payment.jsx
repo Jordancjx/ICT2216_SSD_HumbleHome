@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import PropTypes from "prop-types";
 
-
-
 // Input sanitization
 const sanitizeInput = (str) => str.replace(/[<>\/\\'"`]/g, "").trim();
 
@@ -13,7 +11,6 @@ const isValidCardNumber = (num) => /^\d{16}$/.test(num.replace(/\s+/g, ""));
 const isValidExpiry = (exp) => /^(0[1-9]|1[0-2])\/\d{2}$/.test(exp);
 const isValidCVV = (cvv) => /^\d{3,4}$/.test(cvv);
 const isValidPostal = (postal) => /^[A-Za-z0-9\s\-]{3,10}$/.test(postal);
-
 
 export default function Payment({ user }) {
   const [cart, setCart] = useState([]);
@@ -72,31 +69,30 @@ export default function Payment({ user }) {
     e.preventDefault();
 
     // Sanitize inputs
-  const cleanForm = { ...form };
-  Object.keys(cleanForm).forEach((key) => {
-    if (key !== "expiry" && key !== "cardNumber" && key !== "cvv") {
-      cleanForm[key] = sanitizeInput(cleanForm[key]);
+    const cleanForm = { ...form };
+    Object.keys(cleanForm).forEach((key) => {
+      if (key !== "expiry" && key !== "cardNumber" && key !== "cvv") {
+        cleanForm[key] = sanitizeInput(cleanForm[key]);
+      }
+    });
+
+    // Validate critical fields
+    if (!isValidCardNumber(cleanForm.cardNumber)) {
+      toast.error("Card number must be 16 digits.");
+      return;
     }
-  });
-
-  // Validate critical fields
-  if (!isValidCardNumber(cleanForm.cardNumber)) {
-    toast.error("Card number must be 16 digits.");
-    return;
-  }
-  if (!isValidExpiry(cleanForm.expiry)) {
-    toast.error("Expiry must be in MM/YY format.");
-    return;
-  }
-  if (!isValidCVV(cleanForm.cvv)) {
-    toast.error("CVV must be 3 or 4 digits.");
-    return;
-  }
-  if (!isValidPostal(cleanForm.postalCode)) {
-    toast.error("Postal code must be 3–10 alphanumeric characters.");
-    return;
-  }
-
+    if (!isValidExpiry(cleanForm.expiry)) {
+      toast.error("Expiry must be in MM/YY format.");
+      return;
+    }
+    if (!isValidCVV(cleanForm.cvv)) {
+      toast.error("CVV must be 3 or 4 digits.");
+      return;
+    }
+    if (!isValidPostal(cleanForm.postalCode)) {
+      toast.error("Postal code must be 3–10 alphanumeric characters.");
+      return;
+    }
 
     const formData = {
       cart: cart.map(({ product_id, quantity, price }) => ({
@@ -113,13 +109,12 @@ export default function Payment({ user }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify(formData),
       });
 
       const data = await res.json();
-      console.log(data);
       if (!res.ok) {
         throw new Error(data.error || "Checkout failed.");
       }
@@ -129,7 +124,7 @@ export default function Payment({ user }) {
       window.dispatchEvent(new Event("cartUpdated"));
 
       setTimeout(() => {
-        navigate("/");
+        navigate("/payment/confirmation");
       }, 1500);
     } catch (err) {
       console.error("Checkout error:", err);
@@ -146,13 +141,13 @@ export default function Payment({ user }) {
   }
 
   return (
-    <div className="w-full flex justify-center py-8">
-      <div className="w-5/6 p-8 flex md:flex-row gap-8">
+    <div className="w-full flex justify-center py-8 px-4 md:px-8">
+      <div className="w-full max-w-6xl flex flex-col lg:flex-row gap-8">
         {/* Shipping + Payment Form */}
         <form
           id="checkout-form"
           onSubmit={handleSubmit}
-          className="md:w-1/2 flex flex-col gap-6"
+          className="w-full lg:w-1/2 flex flex-col gap-6"
         >
           {/* Shipping */}
           <div className="bg-white flex flex-col rounded shadow p-5">
@@ -175,14 +170,14 @@ export default function Payment({ user }) {
               className="border px-3 py-2 rounded mb-2"
               required
             />
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
                 name="city"
                 value={form.city}
                 onChange={handleChange}
                 placeholder="City"
-                className="border px-3 py-2 w-1/2 rounded"
+                className="border px-3 py-2 rounded w-full"
                 required
               />
               <input
@@ -191,34 +186,36 @@ export default function Payment({ user }) {
                 value={form.postalCode}
                 onChange={handleChange}
                 placeholder="Postal Code"
-                className="border px-3 py-2 w-1/2 rounded"
+                className="border px-3 py-2 rounded w-full"
                 required
               />
             </div>
           </div>
+
+          {/* Payment */}
           <div className="bg-white rounded shadow p-5">
             <h2 className="text-xl font-bold mb-4">Payment Details</h2>
             <input
               type="text"
               name="cardNumber"
-              maxLength={19} // 16 digits + 3 spaces
+              maxLength={19}
               inputMode="numeric"
               value={form.cardNumber}
               onChange={handleChange}
               placeholder="Card Number"
-              className="border px-3 w-full mb-2 py-2 rounded"
+              className="border px-3 py-2 rounded mb-2 w-full"
               required
             />
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
                 name="expiry"
-                maxLength={5} // MM/YY
+                maxLength={5}
                 inputMode="numeric"
                 value={form.expiry}
                 onChange={handleChange}
                 placeholder="MM/YY"
-                className="border px-3 py-2 rounded w-1/2"
+                className="border px-3 py-2 rounded w-full"
                 required
               />
               <input
@@ -229,17 +226,16 @@ export default function Payment({ user }) {
                 value={form.cvv}
                 onChange={handleChange}
                 placeholder="CVV"
-                className="border px-3 py-2 rounded w-1/2"
+                className="border px-3 py-2 rounded w-full"
                 required
               />
             </div>
-            <input type="hidden" name="payment_method" value="card" />
           </div>
         </form>
 
-        <div className="md:w-1/2 flex flex-col bg-white rounded shadow p-5">
+        {/* Order Summary */}
+        <div className="w-full lg:w-1/2 flex flex-col bg-white rounded shadow p-5">
           <h2 className="text-xl font-bold mb-4">Order Summary</h2>
-
           <ul className="divide-y flex-grow">
             {cart.map((item) => (
               <li key={item.product_id} className="py-2 flex justify-between">
@@ -273,13 +269,12 @@ export default function Payment({ user }) {
   );
 }
 
-
 Payment.propTypes = {
   user: PropTypes.shape({
     user_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     username: PropTypes.string,
-    role: PropTypes.string
+    role: PropTypes.string,
   }).isRequired,
 
   setUser: PropTypes.func.isRequired,
-}
+};
