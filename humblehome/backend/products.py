@@ -689,7 +689,7 @@ def fetch_product(product_id):
     return jsonify(product)
 
 
-@products_bp.route("/api/admin/delete_product/<int:product_id>", methods=["DELETE"])
+@products_bp.route("/admin/delete_product/<int:product_id>", methods=["DELETE"])
 @token_req
 def delete_product(current_user, product_id):
     db = get_db()
@@ -731,7 +731,7 @@ def delete_product(current_user, product_id):
         return jsonify({"error": f"Failed to delete product: {str(e)}"}), 500
 
 
-@products_bp.route("/api/admin/update_order_status/<int:order_id>", methods=["PUT"])
+@products_bp.route("/admin/update_order_status/<int:order_id>", methods=["PUT"])
 @token_req
 def update_order_status(current_user, order_id):
     new_status = request.json.get("status")
@@ -760,7 +760,7 @@ def update_order_status(current_user, order_id):
         cursor.close()
 
 
-@products_bp.route("/api/admin/orders", methods=["GET"])
+@products_bp.route("/admin/orders", methods=["GET"])
 @token_req
 def get_orders(current_user):
     db = get_db()
