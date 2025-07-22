@@ -14,16 +14,15 @@
 
 
 ## Prerequisites
-
 Make sure you have the following installed on your system:
 - Docker
 - Python
 
 ## Getting Started
-
 If you have cloned or copied the project directory:
 
 ```bash
 cd humblehome
 docker-compose down -v (If db error in CMD)
 docker-compose up --build
+```
