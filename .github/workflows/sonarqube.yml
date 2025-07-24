@@ -2,9 +2,9 @@ name: SonarQube Analysis
 
 on:
   push:
-    branches: [ main ]
+    branches: [ practice-for-quiz ]
   pull_request:
-    branches: [ main ]
+    branches: [ practice-for-quiz ]
 
 jobs:
   sonarqube:
@@ -24,7 +24,7 @@ jobs:
         run: npm install
 
       - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@main
+        uses: sonarsource/sonarqube-scan-action@practice-for-quiz
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN2 }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
