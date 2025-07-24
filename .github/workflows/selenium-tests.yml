@@ -31,7 +31,7 @@ jobs:
         working-directory: humblehome/frontend
         run: |
           ls 
-          tar -czvf www-build.tar.gz ./package.json ./src/index.js tests
+          tar -czvf ../../www-build.tar.gz ./package.json ./src ./tests
           ls -l
 
       - name: Upload artifacts
