@@ -25,7 +25,9 @@ jobs:
         run: npm install
 
       - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@master
+        uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN2 }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.branch.name=main
