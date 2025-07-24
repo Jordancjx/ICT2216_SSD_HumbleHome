@@ -1,0 +1,30 @@
+name: SonarQube Analysis
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  sonarqube:
+    name: Analyze with SonarQube
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@main
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN2 }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
