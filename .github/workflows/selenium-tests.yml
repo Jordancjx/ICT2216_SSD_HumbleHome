@@ -68,7 +68,7 @@ jobs:
           name: www-build
 
       - name: Extract artifacts
-        working-directory: /workspace/humblehome/frontend
+        working-directory: /workspace
         run: |
           tar -xzvf www-build.tar.gz
           ls -l
@@ -78,7 +78,7 @@ jobs:
         run: npm install
 
       - name: List node_modules
-        working-directory: humblehome/frontend
+        working-directory: /workspace/humblehome/frontend
         run: ls -l node_modules
 
       - name: List files for debugging
