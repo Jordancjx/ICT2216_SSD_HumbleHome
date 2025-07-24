@@ -3,10 +3,10 @@ name: Node.js Selenium Testing
 on:
   push:
     branches:
-      - main
+      - practice-for-quiz
   pull_request:
     branches:
-      - main
+      - practice-for-quiz
 
 jobs:
   build:
