@@ -68,12 +68,15 @@ jobs:
           ls -l
 
       - name: Install dependencies
+        working-directory: humblehome/frontend
         run: npm install
 
       - name: List node_modules
+        working-directory: humblehome/frontend
         run: ls -l node_modules
 
       - name: List files for debugging
+        working-directory: humblehome/frontend
         run: |
           echo "Current directory:"
           pwd
@@ -85,18 +88,22 @@ jobs:
           ls -ltra tests/
 
       - name: Run unit tests
+        working-directory: humblehome/frontend
         run: npm test
 
       - name: Start Node.js server
+        working-directory: humblehome/frontend
         run: |
           nohup node src/server.js &  # Start the server in the background
           sleep 5  # Give the server some time to start
 
       - name: Verify server is running
+        working-directory: humblehome/frontend
         run: |
           curl -f http://localhost:3000 || { echo "Server failed to start"; exit 1; }
 
       - name: Wait for Selenium server to be up
+        working-directory: humblehome/frontend
         run: |
           for i in {1..10}; do
             curl -s $SELENIUM_HOST && break || sleep 3
