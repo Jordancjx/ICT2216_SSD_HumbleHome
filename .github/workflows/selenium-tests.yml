@@ -49,7 +49,7 @@ jobs:
         - 3000:3000
       options: --network-alias=testserver
       volumes:
-        - ${{ github.workspace }}:/__w/ICT2216_SSD_HumbleHome/ICT2216_SSD_HumbleHome/humblehome/frontend
+        - ${{ github.workspace }}:/workspace
 
     env:
       TEST_BASE_URL: http://testserver:3000
@@ -68,12 +68,13 @@ jobs:
           name: www-build
 
       - name: Extract artifacts
+        working-directory: /workspace/humblehome/frontend
         run: |
           tar -xzvf www-build.tar.gz
           ls -l
 
       - name: Install dependencies
-        working-directory: humblehome/frontend
+        working-directory: /workspace/humblehome/frontend
         run: npm install
 
       - name: List node_modules
@@ -81,7 +82,7 @@ jobs:
         run: ls -l node_modules
 
       - name: List files for debugging
-        working-directory: humblehome/frontend
+        working-directory: /workspace/humblehome/frontend
         run: |
           echo "Current directory:"
           pwd
@@ -93,22 +94,22 @@ jobs:
           ls -ltra tests/
 
       - name: Run unit tests
-        working-directory: humblehome/frontend
+        working-directory: /workspace/humblehome/frontend
         run: npm test
 
       - name: Start Node.js server
-        working-directory: humblehome/frontend
+        working-directory: /workspace/humblehome/frontend
         run: |
           nohup node src/server.js &  # Start the server in the background
           sleep 5  # Give the server some time to start
 
       - name: Verify server is running
-        working-directory: humblehome/frontend
+        working-directory: /workspace/humblehome/frontend
         run: |
           curl -f http://localhost:3000 || { echo "Server failed to start"; exit 1; }
 
       - name: Wait for Selenium server to be up
-        working-directory: humblehome/frontend
+        working-directory: /workspace/humblehome/frontend
         run: |
           for i in {1..10}; do
             curl -s $SELENIUM_HOST && break || sleep 3
