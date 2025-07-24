@@ -21,6 +21,7 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
+        working-directory: humblehome/frontend
         run: npm install
 
       - name: SonarQube Scan
