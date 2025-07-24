@@ -48,6 +48,8 @@ jobs:
       ports:
         - 3000:3000
       options: --network-alias=testserver
+      volumes:
+        - ${{ github.workspace }}:/__w/ICT2216_SSD_HumbleHome/ICT2216_SSD_HumbleHome/humblehome/frontend
 
     env:
       TEST_BASE_URL: http://testserver:3000
