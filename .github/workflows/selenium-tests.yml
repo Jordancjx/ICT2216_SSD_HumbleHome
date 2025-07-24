@@ -100,8 +100,8 @@ jobs:
       - name: Start Node.js server
         working-directory: /workspace/humblehome/frontend
         run: |
-          nohup node src/server.js &  # Start the server in the background
-          sleep 5  # Give the server some time to start
+          nohup node src/server.js &
+          sleep 5
 
       - name: Verify server is running
         working-directory: /workspace/humblehome/frontend
@@ -116,4 +116,5 @@ jobs:
           done
 
       - name: Run Selenium tests
+        working-directory: /workspace/humblehome/frontend
         run: node tests/SeleniumTest.mjs github
