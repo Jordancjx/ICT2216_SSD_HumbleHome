@@ -30,6 +30,7 @@ jobs:
       - name: Prepare artifacts
         working-directory: humblehome/frontend
         run: |
+          cd humblehome/frontend
           tar -czvf www-build.tar.gz ./package.json ./src/server.js tests
           ls -l
 
