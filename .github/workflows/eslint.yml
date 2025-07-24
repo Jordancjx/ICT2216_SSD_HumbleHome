@@ -37,6 +37,7 @@ jobs:
         run: cat reports/eslint-results.sarif || echo "No SARIF report generated"
 
       - name: Upload SARIF report
+        working-directory: humblehome/frontend
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: reports/eslint-results.sarif
