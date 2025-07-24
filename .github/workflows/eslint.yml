@@ -17,18 +17,23 @@ jobs:
           restore-keys: ${{ runner.os }}-node-modules
 
       - name: Install Node.js dependencies
+        working-directory: humblehome/frontend
         run: npm install
 
       - name: Create reports directory
+        working-directory: humblehome/frontend
         run: mkdir -p reports
 
       - name: Install ESLint SARIF Formatter
+        working-directory: humblehome/frontend
         run: npm install @microsoft/eslint-formatter-sarif --save-dev
 
       - name: Run ESLint with SARIF output
+        working-directory: humblehome/frontend
         run: npx eslint . --format @microsoft/eslint-formatter-sarif --output-file reports/eslint-results.sarif || true
 
       - name: Debug ESLint Output
+        working-directory: humblehome/frontend
         run: cat reports/eslint-results.sarif || echo "No SARIF report generated"
 
       - name: Upload SARIF report
